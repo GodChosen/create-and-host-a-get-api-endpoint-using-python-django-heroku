@@ -19,7 +19,7 @@ from rest_framework import routers
 from api import views
 
 router = routers.DefaultRouter()
-router.register(r'slackusers', views.SlackUsersViewSet)
+# router.register(r'slackusers', views.SlackUsersViewSet)
 # Setup automatic URL routing
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [

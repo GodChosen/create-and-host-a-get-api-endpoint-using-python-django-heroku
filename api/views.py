@@ -2,6 +2,7 @@ from django.shortcuts import render
 from api.models import SlackUsers
 from rest_framework import viewsets
 from .serializers import SlackUsersSerializer
+from rest_framework.generics import RetrieveAPIView
 
 # Create your views here.
 # class SlackUsersViewSet(viewsets.ModelViewSet):

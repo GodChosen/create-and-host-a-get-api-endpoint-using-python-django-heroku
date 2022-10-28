@@ -203,7 +203,7 @@ INSTALLED_APPS = [
 ## 3. Deploy to HEROKU
 Below are the steps to deploy to Heroku:
 
-- Create an app on Heroku
+- Create an app on Heroku and connect it to the GitHub repository for this project
 
 ***App Created on Heroku***
 <br />
@@ -236,14 +236,14 @@ pip install whitenoise
 
 - Configure django for heroku
 ```
-# install `django_heroku`
-pip install django_heroku
+# install `django_on_heroku`
+pip install django_on_heroku
 
 # import `django_heroku` in the `settings.py`
-import django_heroku
+import django_on_heroku
 
 # add the following code to the `setting.py` file
-django_heroku.settings(locals())
+django_on_heroku.settings(locals())
 ```
 
 - Configure `gunicorn` to help serve our app online
@@ -257,6 +257,18 @@ release: python manage.py makemigrations --noinput
 release: python manage.py collectstatic --noinput
 release: python manage.py migrate --noinput
 
-# create and populate the requirements.txt file
-pip freeze > requirements.txt
+# install psycopg2 module, as heroku needs it for the proper functioning of postgres database it provisions for our app
+pip install psycopg2-binary
+
+# create and populate the `Pipfile` which Heroku uses to install dependencies
+pipenv shell
 ```
+
+- Add the SECRET_KEY as variable to your Heroku app.
+
+- Push changes to GitHub abd Deploy changes on Heroku.
+
+
+***API working on Heroku***
+<br />
+![API working on Heroku](screenshots/api-deployed-to-heroku.PNG)

@@ -269,6 +269,6 @@ pipenv shell
 - Push changes to GitHub abd Deploy changes on Heroku.
 
 
-***API working on Heroku***
+***API Endpoint working on Heroku***
 <br />
 ![API working on Heroku](screenshots/api-deployed-to-heroku.PNG)

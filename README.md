@@ -175,7 +175,7 @@ urlpatterns = [
 ]
 ```
 
-- Modify the file `settings.py` in the project folder 'apiproject'
+- Modify the file `settings.py` in the project folder `apiproject`
 Add the code below to the file to allow us to control how many objects per page are returned.
 ```
 REST_FRAMEWORK = {

@@ -200,3 +200,63 @@ INSTALLED_APPS = [
 <br />
 ![Browser API Test](screenshots/browser-api-test.PNG)
 
+## 3. Deploy to HEROKU
+Below are the steps to deploy to Heroku:
+
+- Create an app on Heroku
+
+***App Created on Heroku***
+<br />
+![App Created on Heroku](screenshots/app-created-on-heroku.PNG)
+
+- Create an environment file `.env` in the root folder and paste the code below.
+```
+export SECRET_KEY="key-in-the-settings.py file"
+```
+
+- Modify the settings.py file as follows
+```
+# add the `import os` code and change the SECRET_KEY line to the below line
+import os
+SECRET_KEY = os.environ.get(SECRET_KEY)
+
+# change the security warning session to the below code
+DEBUG = False
+ALLOWED_HOSTS = ["*"]
+```
+
+- Install whitenoise and configure django to use to serve static site
+```
+# install whitenoise
+pip install whitenoise
+
+# add whitenoise middleware to the middleware section of the `setting.py` file
+'whitenoise.middleware.WhiteNoiseMiddleware',
+```
+
+- Configure django for heroku
+```
+# install `django_heroku`
+pip install django_heroku
+
+# import `django_heroku` in the `settings.py`
+import django_heroku
+
+# add the following code to the `setting.py` file
+django_heroku.settings(locals())
+```
+
+- Configure `gunicorn` to help serve our app online
+```
+# install gunicorn
+pip install gunicorn
+
+# create the `Procfile` and paste the below lines in it
+web: gunicorn api.wsgi
+release: python manage.py makemigrations --noinput
+release: python manage.py collectstatic --noinput
+release: python manage.py migrate --noinput
+
+# create and populate the requirements.txt file
+pip freeze > requirements.txt
+```

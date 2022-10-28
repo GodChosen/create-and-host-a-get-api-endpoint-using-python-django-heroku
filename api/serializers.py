@@ -1,7 +1,7 @@
-from api.models import SlackUsers
+from api.models import SlackUser
 from rest_framework import serializers
 
-class SlackUsersSerializer(serializers.HyperlinkedModelSerializer):
+class SlackUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SlackUsers
+        model = SlackUser
         fields = ["slackUsername", "backend", "age", "bio"]

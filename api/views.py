@@ -1,17 +1,17 @@
 from django.shortcuts import render
-from api.models import SlackUsers
+from api.models import SlackUser
 from rest_framework import viewsets
-from .serializers import SlackUsersSerializer
-from rest_framework.generics import RetrieveAPIView
+from .serializers import SlackUserSerializer
+# from rest_framework.generics import RetrieveAPIView
 
 # Create your views here.
-# class SlackUsersViewSet(viewsets.ModelViewSet):
-#     # API endpoint that allows users to be viewed or edited.
+class SlackUserViewSet(viewsets.ModelViewSet):
+    # API endpoint that allows users to be viewed or edited.
     
-#     queryset = SlackUsers.objects.all().order_by('-slackUsername')
-#     serializer_class = SlackUsersSerializer
+    queryset = SlackUser.objects.all().order_by('-id')
+    serializer_class = SlackUserSerializer
     
-class GetSlackUsers(RetrieveAPIView):
-    queryset = SlackUsers.objects.all().order_by('-slackUsername')
-    serializer_class = SlackUsersSerializer
+# class GetSlackUser(RetrieveAPIView):
+#     queryset = SlackUser.objects.all().order_by('-slackUsername')
+#     serializer_class = SlackUserSerializer
 

@@ -9,3 +9,5 @@ pytz==2022.5
 sqlparse==0.4.3
 tzdata==2022.5
 whitenoise==6.2.0
+python-decouple==3
+dj-static==0.0.6

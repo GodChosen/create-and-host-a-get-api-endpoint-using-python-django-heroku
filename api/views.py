@@ -16,23 +16,3 @@ def slackUser_list(request, format=json):
     slackUser = SlackUser.objects.all()
     serializer = SlackUserSerializer(slackUser, many=True)
     return Response(serializer.data[0])
-<<<<<<< HEAD
-=======
-
-# from rest_framework.generics import RetrieveAPIView
-
-# Create your views here.
-# class SlackUserViewSet(viewsets.ModelViewSet):
-#     # API endpoint that allows users to be viewed or edited.
-    
-#     queryset = SlackUser.objects.all()
-#     serializer_class = SlackUserSerializer
-    
-# class GetSlackUser(RetrieveAPIView):
-#     serializer_class = SlackUserSerializer
-#     objectset = SlackUser.objects.all()
-
-<<<<<<< HEAD
->>>>>>> parent of 6b43dbf (Made changes)
-=======
->>>>>>> parent of 6b43dbf (Made changes)

@@ -58,7 +58,7 @@ cd api && vi models.py
 # copy and paste the code below to the models.py file. Then savee and close the file.
 from django.db import models
 
-class SlackUsers(models.Model):
+class SlackUser(models.Model):
     slackUsername = models.CharField(max_length= 15)
     backend = models.BooleanField()
     age = models.IntegerField()
@@ -71,9 +71,9 @@ class SlackUsers(models.Model):
 - Modify the admin.py file in the app folder
 ```
 # open the file and add the below code to it
-from .models import SlackUsers
+from .models import SlackUser
 
-admin.site.register(SlackUsers)
+admin.site.register(SlackUser)
 ```
 
 - Modify the installed_apps section of the settings.py file in the django project folder "apiproject" to look like below
@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     
     # My Created Apps
     'api',
@@ -128,12 +129,12 @@ To build the API endpoint, we would use the Django REST Framework and Serializer
 cd api && touch serializers.py
 
 # copy and paste the code below into the file and save it
-from api.models import SlackUsers
+from api.models import SlackUser
 from rest_framework import serializers
 
-class SlackUsersSerializer(serializers.HyperlinkedModelSerializer):
+class SlackUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = SlackUsers
+        model = SlackUser
         fields = ["url", "slackUsername", "backend", "age", "bio"]
 ```
 
@@ -143,45 +144,46 @@ class SlackUsersSerializer(serializers.HyperlinkedModelSerializer):
 We will define our viewsets in order to send our data from our backend to the browser
 ```
 # copy and paste the code below into the file and save it
-from api.models import SlackUsers
-from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from api.models import SlackUser
+from api.serializers import SlackUserSerializer
 
-From .serializers import SlackUsersSerializer
-class SlackUsersViewSet(viewsets.ModelViewSet):
-    # API endpoint that allows slack users to be viewed or edited.
+
+@api_view(['GET'])
+def slackUser_list(request, format=None):
     
-    queryset = SlackUsers.objects.all().order_by('-slackUsername')
-    serializer_class = SlackUsersSerializer
+    slackUser = SlackUser.objects.all()
+    serializer = SlackUserSerializer(slackUser, many=True)
+    return Response(serializer.data[0]) # return just the first slack user
 ```
 
 ***Django Rest Framework gives us these viewsets for standard CRUD operations on a SQL database. The viewsets accept and handle GET, POST, PUT and DELETE requests, as well as allow for a single endpoint to handle requests for list views of objects in the database and for individual object instances***
 
-- Modify the module `urls.py` in the project folder 'apiproject'
-To tell Django what views to return given a particular route, we will import `include` and `path` from the `django.urls` module, as well as routers from Django Rest Framework. To do so, we will modify the `urls.py` by including the following code
+- Create a `urls.py` file in the app folder 'api' and paste the code below into it
+```
+from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
+from api import views
+
+urlpatterns = [
+    path('', views.slackUser_list)
+]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
+```
+
+- Modify the file `urls.py` in the project folder 'apiproject' to look like below
 ```
 from django.contrib import admin
 from django.urls import include, path
-from rest_framework import routers
-from api import views
-
-router = routers.DefaultRouter()
-router.register(r'slackusers', views.SlackUsersViewSet)
 # Setup automatic URL routing
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('', include('api.urls'))
 ]
-```
-
-- Modify the file `settings.py` in the project folder `apiproject`
-Add the code below to the file to allow us to control how many objects per page are returned.
-```
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
-}
 ```
 
 - Still modifying the file `settings.py` in the project folder 'apiproject', add the code to the installed apps section.
@@ -234,41 +236,20 @@ pip install whitenoise
 'whitenoise.middleware.WhiteNoiseMiddleware',
 ```
 
-- Configure django for heroku
-```
-# install `django_on_heroku`
-pip install django_on_heroku
-
-# import `django_heroku` in the `settings.py`
-import django_on_heroku
-
-# add the following code to the `setting.py` file
-django_on_heroku.settings(locals())
-```
-
 - Configure `gunicorn` to help serve our app online
 ```
 # install gunicorn
 pip install gunicorn
 
 # create the `Procfile` and paste the below lines in it
-web: gunicorn api.wsgi
-release: python manage.py makemigrations --noinput
-release: python manage.py collectstatic --noinput
-release: python manage.py migrate --noinput
-
-# install psycopg2 module, as heroku needs it for the proper functioning of postgres database it provisions for our app
-pip install psycopg2-binary
-
-# create and populate the `Pipfile` which Heroku uses to install dependencies
-pipenv shell
+web: gunicorn apiproject.wsgi
 ```
 
 - Add the SECRET_KEY as variable to your Heroku app.
 
 - Push changes to GitHub abd Deploy changes on Heroku.
 
-
+[Click here to check out the working API Endpoint](screenshots/api-deployed-to-heroku.PNG)
 ***API working on Heroku***
 <br />
 ![API working on Heroku](screenshots/api-deployed-to-heroku.PNG)

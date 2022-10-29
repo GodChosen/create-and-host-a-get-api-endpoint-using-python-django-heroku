@@ -1,8 +1,3 @@
-# from django.shortcuts import render
-# from api.models import SlackUser
-# from rest_framework import viewsets
-# from .serializers import SlackUserSerializer
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -29,4 +24,3 @@ def slackUser_list(request, format=json):
 # class GetSlackUser(RetrieveAPIView):
 #     serializer_class = SlackUserSerializer
 #     objectset = SlackUser.objects.all()
-

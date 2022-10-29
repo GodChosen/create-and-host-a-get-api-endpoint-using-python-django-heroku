@@ -4,14 +4,16 @@ from rest_framework.response import Response
 from api.models import SlackUser
 from api.serializers import SlackUserSerializer
 from django.http import JsonResponse
+import json
+
 
 
 @api_view(['GET'])
 def slackUser_list(request, format=None):
     
     slackUser = SlackUser.objects.all()
-    serializer = SlackUserSerializer(slackUser)
-    return Response(serializer.data)
+    serializer = SlackUserSerializer('json', slackUser, many=True)
+    return Response(serializer.data[0])
 
 # from rest_framework.generics import RetrieveAPIView
 

@@ -6,7 +6,7 @@ from api.serializers import SlackUserSerializer
 
 
 @api_view(['GET'])
-def slackUser_list(request, format=None):
+def slackUser_list(request, format=json):
     
     slackUser = SlackUser.objects.all()
     serializer = SlackUserSerializer(slackUser, many=True)

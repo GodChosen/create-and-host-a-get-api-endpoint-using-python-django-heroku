@@ -10,7 +10,7 @@ def slackUser_list(request, format=json):
     
     slackUser = SlackUser.objects.all()
     serializer = SlackUserSerializer(slackUser, many=True)
-    return Response(serializer.data)[0]
+    return Response(serializer.data[0])
 
 # from rest_framework.generics import RetrieveAPIView
 

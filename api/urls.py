@@ -6,3 +6,5 @@ urlpatterns = [
     path('', views.slackUser_list),
     path('/redirect/', redirect_view)
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

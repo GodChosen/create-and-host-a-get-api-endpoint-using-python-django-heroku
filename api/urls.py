@@ -6,4 +6,4 @@ urlpatterns = [
     path('', views.slackUser_list)
 ]
 
-urlpatterns = format_suffix_patterns('/?format=json')
+urlpatterns = format_suffix_patterns(urlpatterns, allowed='json')

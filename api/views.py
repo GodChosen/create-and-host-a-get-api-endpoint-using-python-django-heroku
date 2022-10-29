@@ -32,4 +32,7 @@ def slackUser_list(request, format=json):
 #     serializer_class = SlackUserSerializer
 #     objectset = SlackUser.objects.all()
 
+<<<<<<< HEAD
+>>>>>>> parent of 6b43dbf (Made changes)
+=======
 >>>>>>> parent of 6b43dbf (Made changes)

@@ -128,12 +128,12 @@ To build the API endpoint, we would use the Django REST Framework and Serializer
 cd api && touch serializers.py
 
 # copy and paste the code below into the file and save it
-from api.models import SlackUsers
+from api.models import SlackUser
 from rest_framework import serializers
 
-class SlackUsersSerializer(serializers.HyperlinkedModelSerializer):
+class SlackUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = SlackUsers
+        model = SlackUser
         fields = ["url", "slackUsername", "backend", "age", "bio"]
 ```
 
@@ -143,45 +143,46 @@ class SlackUsersSerializer(serializers.HyperlinkedModelSerializer):
 We will define our viewsets in order to send our data from our backend to the browser
 ```
 # copy and paste the code below into the file and save it
-from api.models import SlackUsers
-from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from api.models import SlackUser
+from api.serializers import SlackUserSerializer
 
-From .serializers import SlackUsersSerializer
-class SlackUsersViewSet(viewsets.ModelViewSet):
-    # API endpoint that allows slack users to be viewed or edited.
+
+@api_view(['GET'])
+def slackUser_list(request, format=None):
     
-    queryset = SlackUsers.objects.all().order_by('-slackUsername')
-    serializer_class = SlackUsersSerializer
+    slackUser = SlackUser.objects.all()
+    serializer = SlackUserSerializer(slackUser, many=True)
+    return Response(serializer.data[0]) # return just the first slack user
 ```
 
 ***Django Rest Framework gives us these viewsets for standard CRUD operations on a SQL database. The viewsets accept and handle GET, POST, PUT and DELETE requests, as well as allow for a single endpoint to handle requests for list views of objects in the database and for individual object instances***
 
-- Modify the module `urls.py` in the project folder 'apiproject'
-To tell Django what views to return given a particular route, we will import `include` and `path` from the `django.urls` module, as well as routers from Django Rest Framework. To do so, we will modify the `urls.py` by including the following code
+- Create a `urls.py` file in the app folder 'api' and paste the code below into it
+```
+from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
+from api import views
+
+urlpatterns = [
+    path('', views.slackUser_list)
+]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
+```
+
+- Modify the file `urls.py` in the project folder 'apiproject' to look like below
 ```
 from django.contrib import admin
 from django.urls import include, path
-from rest_framework import routers
-from api import views
-
-router = routers.DefaultRouter()
-router.register(r'slackusers', views.SlackUsersViewSet)
 # Setup automatic URL routing
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('', include('api.urls'))
 ]
-```
-
-- Modify the file `settings.py` in the project folder `apiproject`
-Add the code below to the file to allow us to control how many objects per page are returned.
-```
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
-}
 ```
 
 - Still modifying the file `settings.py` in the project folder 'apiproject', add the code to the installed apps section.

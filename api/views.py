@@ -10,8 +10,8 @@ from django.http import JsonResponse
 def slackUser_list(request, format=None):
     
     slackUser = SlackUser.objects.all()
-    serializer = SlackUserSerializer(slackUser, many=True)
-    return Response(serializer.data[0])
+    serializer = SlackUserSerializer(slackUser)
+    return Response(serializer.data)
 
 # from rest_framework.generics import RetrieveAPIView
 
